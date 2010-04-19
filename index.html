@@ -1,0 +1,368 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+  <meta HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; CHARSET=utf-8">
+    <style type="text/css">
+#map {
+        width: 100%;
+        height: 100%;
+        border: 0px;
+        padding: 0px;
+        position: absolute;
+     }
+body {
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+        height: 100%;
+     }
+
+#links {
+  background: white;
+  color: black;
+  padding: 2px;
+  z-index:1000;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  font-size: 0.8em;
+  text-align: center;
+  position: absolute;
+  bottom: 5px;
+  /* for IE */
+  filter:alpha(opacity=80);
+  /* CSS3 standard */
+  opacity:0.8;
+  /* for Mozilla */
+  -moz-opacity:0.8;
+ }
+
+#scale {
+  padding: 2px;
+  z-index: 1000;
+  bottom: 30px;
+  background: white;
+  color: black;
+  width: 130px;
+  height: 40px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  font-size: 10px;
+  text-align: center;
+  right: 0;
+  position: absolute;
+  /* for IE */
+  filter:alpha(opacity=90);
+  /* CSS3 standard */
+  opacity:0.9;
+  /* for Mozilla */
+  -moz-opacity:0.9;
+  }
+#coords {
+  padding: 2px;
+  z-index: 1000;
+  bottom: 10px;
+  background: white;
+  color: black;
+  width: 130px;
+  height: 12px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  font-size: 10px;
+  text-align: justify;
+  right: 0;
+  position: absolute;
+  /* for IE */
+  filter:alpha(opacity=90);
+  /* CSS3 standard */
+  opacity:0.9;
+  /* for Mozilla */
+  -moz-opacity:0.9;
+  }
+#infobox {
+  padding: 2px;
+  z-index: 1000;
+  visibility: hidden;
+  top: 50;
+  left: 25%;
+  width: 50%;
+  cursor: pointer;
+  position: absolute;
+  background: white;
+  color: black;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  font-size: 0.8em;
+}
+
+#legend {
+  width: 100%;
+  padding: 1em;
+}
+#legend td{
+  padding: 4px;
+}
+
+#controlToggle li {
+     list-style: none;
+     float: left;
+}
+
+#output {
+  color: black;
+  padding: 2px;
+  z-index:1000;
+  font-size: 0.8em;
+  text-align: left;
+  position: absolute;
+  top: 364px;
+  left: 40px;
+  width: 80px;
+  float: left;
+  /* for IE */
+  filter:alpha(opacity=90);
+  /* CSS3 standard */
+  opacity:0.9;
+  /* for Mozilla */
+  -moz-opacity:0.9;
+}
+
+        .olControlPanel div { 
+          display:block;
+          position:absolute;
+          width:  28px;
+          height: 28px;
+          top:   300px;
+          left:    8px;
+          margin:  2px;
+          background-color: red;
+        }
+        
+        .olControlPanel .olControlMouseDefaultsItemActive { 
+          top: 300px;
+          left: 8px;
+          background-color: blue;
+          background-image: url("openlayers/theme/default/img/panning-hand-on.png");
+        }
+        .olControlPanel .olControlMouseDefaultsItemInactive { 
+          top: 300px;
+          left: 8px;
+          background-color: orange;
+          background-image: url("openlayers/theme/default/img/panning-hand-off.png");
+        }
+        .olControlPanel .olControlZoomBoxItemInactive { 
+          top: 330px;
+          left: 8px;
+          background-color: orange;
+          background-image: url("openlayers/theme/default/img/drag-rectangle-off.png");
+        }
+        .olControlPanel .olControlZoomBoxItemActive { 
+          top: 330px;
+          left: 8px;
+          background-color: blue;
+          background-image: url("openlayers/theme/default/img/drag-rectangle-on.png");
+        }
+        .olControlPanel .olControlMeasureItemActive { 
+          top: 360px;
+          left: 8px;
+          background-image: url("openlayers/theme/default/img/measure-on.png");
+        }
+        .olControlPanel .olControlMeasureItemInactive { 
+          top: 360px;
+          left: 8px;
+          background-image: url("openlayers/theme/default/img/measure-off.png");
+        }
+  
+    </style>
+    <script src="http://turaterkep.hostcity.hu/openlayers/OpenLayers.js" type="text/javascript"></script>
+    <script src="tuhu.js"></script>
+    <script type="text/javascript">
+        var map, measureControls;
+        var domborzat = null;
+        var kontur = null;
+
+        function init(){
+            map = new OpenLayers.Map('map',
+                    {controls: [
+                    new OpenLayers.Control.Permalink('permalink'),
+                    new OpenLayers.Control.KeyboardDefaults()],
+                    units: "m",
+                    tileSize: new OpenLayers.Size(512,512),
+                    projection: new OpenLayers.Projection("EPSG:900913"),
+                    displayProjection: new OpenLayers.Projection("EPSG:4326"),
+                    maxExtent: new OpenLayers.Bounds( lonToMercator(16), latToMercator(45), lonToMercator(23), latToMercator(49))
+                    });
+
+            domborzat =  new OpenLayers.Layer.TUHU.SRTM("Domborzat", 
+                    "http://turaterkep.hostcity.hu/srtm/",  {});
+            layerMapnik = new OpenLayers.Layer.TUHU.Mapnik("Turstautak.hu (by Mapnik)",
+                    "http://turaterkep.hostcity.hu/tiles/", {});
+
+            layerMapnik.isBaseLayer = true;
+            domborzat.isBaseLayer = false;
+            domborzat.transparent= false;
+            domborzat.setVisibility(true);
+
+            map.addLayers([layerMapnik, domborzat]);
+
+            map.addControl(new OpenLayers.Control.LayerSwitcher({title:"Réteg választó."}));
+
+
+            map.addControl(new OpenLayers.Control.ScaleLine({div: document.getElementById("scale")}));
+
+            
+            map.events.register("mousemove", map, function(e) { 
+                var position = this.events.getMousePosition(e);
+                var LonLat = map.getLonLatFromPixel(position);
+                OpenLayers.Util.getElement("coords").innerHTML = mercatorToLatDM(LonLat) + " " + mercatorToLonDM(LonLat);
+            });
+
+            var PanZoomBar = new OpenLayers.Control.PanZoomBar();
+            var panel = new OpenLayers.Control.Panel({defaultControl: PanZoomBar});
+            panel.addControls([
+                PanZoomBar,
+                new OpenLayers.Control.MouseDefaults({title:'Mozgatás'}), 
+                new OpenLayers.Control.ZoomBox({title:"Nagyítás kijelöléssel."})
+            ]);
+            
+            // style the sketch fancy
+            var sketchSymbolizers = {
+                "Point": {
+                    pointRadius: 4,
+                    graphicName: "square",
+                    fillColor: "#FFCC00",
+                    fillOpacity: 1,
+                    strokeWidth: 1,
+                    strokeOpacity: 1,
+                    strokeColor: "#333333"
+                },
+                "Line": {
+                    strokeWidth: 3,
+                    strokeOpacity: 1,
+                    strokeColor: "#FF1111",
+                    strokeDashstyle: "dash"
+                }
+            };
+            var style = new OpenLayers.Style();
+            style.addRules([
+                new OpenLayers.Rule({symbolizer: sketchSymbolizers})
+            ]);
+            var styleMap = new OpenLayers.StyleMap({"default": style});
+
+            var options = {
+                handlerOptions: {
+                    style: "default", // this forces default render intent
+                    layerOptions: {styleMap: styleMap},
+                    persist: true
+                },
+                title: "Mérőszalag: Egy kattintás pont letételéhez, dupla kattintás befejezéshez."
+            };
+            measureControls = {
+                line: new OpenLayers.Control.Measure(
+                  OpenLayers.Handler.Path, options
+                )
+            };
+
+            var control;
+            for(var key in measureControls) {
+                control = measureControls[key];
+                control.events.on({
+                    "measure": handleMeasurements,
+                    "measurepartial": handleMeasurements
+                });
+                panel.addControls([control]);
+            }
+
+            map.addControl(panel);
+
+            if(!map.getCenter()) map.setCenter(lonLatToMercator( new OpenLayers.LonLat(19.41199, 47.16085)), 7);
+
+            document.getElementById('lineToggle').checked = false;
+        }
+
+        function hideshow(which){ 
+          if (!document.getElementById)
+          return
+          if(which.style.visibility == 'visible'){
+            which.style.visibility = 'hidden';
+          } else {
+            which.style.visibility = 'visible';
+          }
+        }
+
+        function calcVincenty(geometry) {
+            var dist = 0;
+            for (var i = 1; i < geometry.components.length; i++) {
+                var first = geometry.components[i-1];
+                var second = geometry.components[i];
+                var merc1 = new OpenLayers.LonLat(first.x,first.y);
+                var merc2 = new OpenLayers.LonLat(second.x,second.y);
+                dist += OpenLayers.Util.distVincenty(new mercatorToLonLat(merc1), new mercatorToLonLat(merc2));
+            }
+            return dist;
+        }
+
+        function handleMeasurements(event) {
+            var geometry = event.geometry;
+            var units = event.units;
+            var order = event.order;
+            var measure = event.measure;
+            var element = document.getElementById('output');
+            var out = "";
+            if(order == 1) {
+                out += calcVincenty(geometry).toFixed(3) + " km";
+            } else {
+                out += calcVincenty(geometry).toFixed(3) + " km<sup>2</" + "sup>";
+            }
+            element.innerHTML = out;
+        }
+
+        function toggleControl(element) {
+            for(key in measureControls) {
+                var control = measureControls[key];
+                if(element.checked) {
+                    control.activate();
+                } else {
+                    control.deactivate();
+                }
+            }
+        }
+    </script>
+  </head>
+  <body onload="init()">
+  <div id="panel"></div>
+  <div id="map"></div>
+  <div id="links">
+    <a id="permalink" href="">Permalink</a><br />
+    <a href="javascript:hideshow(document.getElementById('infobox'))">Info</a><br />
+    <a href="http://www.openmaps.eu/magellan">3D Topo maps for Magellan</a><br />
+    Támogató: <a href="http://www.hostcity.hu" target="_blank">Hostcity</a>
+  </div>
+  <div id="output">
+  </div>
+  <div id="scale"></div>
+  <div id="coords"></div> 
+  <div id="infobox" onclick="javascript:hideshow(document.getElementById('infobox'))">
+    A térképet <a href="http://www.geocaching.hu/users.geo?id=18721" target="_blank">bpeti68</a> készítette 
+    <a href="http://www.mapnik.org" target="_blank">Mapnik</a> eszközkészlettel a <a href="http://turistautak.hu" target="_blank">turistautak.hu</a> adatbázisa alapján.<br />
+    Az adatbázisból minden nap 01:00 órakor letöltött adatokból készüt.<br />
+	<table id="legend">
+	<tr><th colspan="4">Jelmagyarázat</th></tr>
+	<tr><td colspan="2"><b>Utak</b></td><td colspan="2"><b>Felületek</b></td></tr>
+	<tr><td>Autópálya:</td><td><img src="img/motorway.png"></td><td>Erdő:</td><td><img src="img/forest.png"></td></tr>
+	<tr><td>Autóút:</td><td><img src="img/trunk.png"></td><td>Település:</td><td><img src="img/inhabited.png"></td></tr>
+    <tr><td>Elsőrendű főútvonal:</td><td><img src="img/primary.png"></td><td>Mezőgazdasági terület:</td><td><img src="img/agricult.png"></td></tr>
+	<tr><td>Másodrendű főútvonal:</td><td><img src="img/secondary.png"></td><td>Sport létesítmény:</td><td><img src="img/sport.png"></td></tr>
+	<tr><td>Harmadrendű főútvonal:</td><td><img src="img/tertiary.png"></td><td>Ipari terület:</td><td><img src="img/industrial.png"></td></tr>
+	<tr><td>Utca:</td><td><img src="img/residential.png"></td><td>&nbsp;</td><td>&nbsp;</td></tr>
+	<tr><td>Földút:</td><td><img src="img/unsurfaced.png"></td><td>&nbsp;</td><td>&nbsp;</td></tr>
+	<tr><td>Gyalogút:</td><td><img src="img/walkway.png"></td><td>&nbsp;</td><td>&nbsp;</td></tr>
+    </table>
+	<p>
+	Verzió: 0.3-alfa
+	</p>
+  </div>
+</body>
+</html>
