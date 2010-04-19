@@ -280,6 +280,7 @@ body {
             map.addControl(panel);
             panel.activateControl(navControl);
 
+            mapElement = document.getElementById("map").addEventListener("mousewheel", mousewheelHandler, false);
             if(!map.getCenter()) map.setCenter(lonLatToMercator( new OpenLayers.LonLat(19.41199, 47.16085)), 7);
 
             document.getElementById('lineToggle').checked = false;
@@ -293,6 +294,10 @@ body {
           } else {
             which.style.visibility = 'visible';
           }
+        }
+
+        function mousewheelHandler(e) {
+          map.pan(-e.wheelDeltaX, -e.wheelDeltaY, {animate:false});
         }
 
         function calcVincenty(geometry) {
