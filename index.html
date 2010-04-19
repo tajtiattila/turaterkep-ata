@@ -221,9 +221,11 @@ body {
 
             var PanZoomBar = new OpenLayers.Control.PanZoomBar();
             var panel = new OpenLayers.Control.Panel({defaultControl: PanZoomBar});
+
+			var navControl = new OpenLayers.Control.Navigation({title:'Mozgatás', zoomWheelEnabled:false});
             panel.addControls([
                 PanZoomBar,
-                new OpenLayers.Control.MouseDefaults({title:'Mozgatás'}), 
+                navControl,
                 new OpenLayers.Control.ZoomBox({title:"Nagyítás kijelöléssel."})
             ]);
             
@@ -276,6 +278,7 @@ body {
             }
 
             map.addControl(panel);
+			panel.activateControl(navControl);
 
             if(!map.getCenter()) map.setCenter(lonLatToMercator( new OpenLayers.LonLat(19.41199, 47.16085)), 7);
 
