@@ -1,3 +1,6 @@
+
+baseUrl = "http://turaterkep.hostcity.hu/"
+
 /**
  * Namespace: Util.TUHU
  */
@@ -181,7 +184,7 @@ OpenLayers.Layer.TUHU.Mapnik = OpenLayers.Class(OpenLayers.Layer.TUHU, {
      * options - {Object} Hashtable of extra options to tag onto the layer
      */
     initialize: function(name, options) {
-        var url = ["tiles/"];
+        var url = [baseUrl+"tiles/"];
         options = OpenLayers.Util.extend({ numZoomLevels: 17 }, options);
         var newArguments = [name, url, options];
         OpenLayers.Layer.TUHU.prototype.initialize.apply(this, newArguments);
@@ -205,7 +208,7 @@ OpenLayers.Layer.TUHU.Contours = OpenLayers.Class(OpenLayers.Layer.TUHU, {
      * options - {Object} Hashtable of extra options to tag onto the layer
      */
     initialize: function(name, options) {
-        var url = ["contours/"];
+        var url = [baseUrl+"contours/"];
         options = OpenLayers.Util.extend({ numZoomLevels: 17 }, options);
         var newArguments = [name, url, options];
         OpenLayers.Layer.TUHU.prototype.initialize.apply(this, newArguments);
@@ -229,7 +232,7 @@ OpenLayers.Layer.TUHU.SRTM = OpenLayers.Class(OpenLayers.Layer.TUHU, {
      * options - {Object} Hashtable of extra options to tag onto the layer
      */
     initialize: function(name, options) {
-        var url = ["srtm/"];
+        var url = [baseUrl+"srtm/"];
         options = OpenLayers.Util.extend({ numZoomLevels: 17 }, options);
         var newArguments = [name, url, options];
         OpenLayers.Layer.TUHU.prototype.initialize.apply(this, newArguments);
