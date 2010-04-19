@@ -222,7 +222,7 @@ body {
             var PanZoomBar = new OpenLayers.Control.PanZoomBar();
             var panel = new OpenLayers.Control.Panel({defaultControl: PanZoomBar});
 
-			var navControl = new OpenLayers.Control.Navigation({title:'Mozgatás', zoomWheelEnabled:false});
+            var navControl = new OpenLayers.Control.Navigation({title:'Mozgatás', zoomWheelEnabled:false});
             panel.addControls([
                 PanZoomBar,
                 navControl,
@@ -278,7 +278,7 @@ body {
             }
 
             map.addControl(panel);
-			panel.activateControl(navControl);
+            panel.activateControl(navControl);
 
             if(!map.getCenter()) map.setCenter(lonLatToMercator( new OpenLayers.LonLat(19.41199, 47.16085)), 7);
 
@@ -369,3 +369,4 @@ body {
   </div>
 </body>
 </html>
+<!-- vim: set expandtab softtabstop=2 shiftwidth=2: -->
