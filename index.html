@@ -184,6 +184,9 @@ body {
         var kontur = null;
 
         function init(){
+            var altscroll = false;
+            if (location.search.match(/[?&]altv=1/))
+                altscroll = true;
             map = new OpenLayers.Map('map',
                     {controls: [
                     new OpenLayers.Control.Permalink('permalink'),
@@ -222,7 +225,7 @@ body {
             var PanZoomBar = new OpenLayers.Control.PanZoomBar();
             var panel = new OpenLayers.Control.Panel({defaultControl: PanZoomBar});
 
-            var navControl = new OpenLayers.Control.Navigation({title:'Mozgatás', zoomWheelEnabled:false});
+            var navControl = new OpenLayers.Control.Navigation({title:'Mozgatás', zoomWheelEnabled:!altscroll});
             panel.addControls([
                 PanZoomBar,
                 navControl,
@@ -280,7 +283,16 @@ body {
             map.addControl(panel);
             panel.activateControl(navControl);
 
-            mapElement = document.getElementById("map").addEventListener("mousewheel", mousewheelHandler, false);
+            if (altscroll)
+                mapElement = document.getElementById("map").addEventListener("mousewheel", mousewheelHandler, false);
+
+            var version = "Verzió: 0.4-alfa. ";
+            if (altscroll)
+                version += "Alternatív változat, görgetés: mozgatás. (Normál változat <a href=\"index.html\">itt</a>)";
+            else
+                version += "Normál változat, görgetés: nagyítás. (Alternatív változat <a href=\"index.html?altv=1\">itt</a>)";
+            document.getElementById("versionParagraph").innerHTML = version;
+
             if(!map.getCenter()) map.setCenter(lonLatToMercator( new OpenLayers.LonLat(19.41199, 47.16085)), 7);
 
             document.getElementById('lineToggle').checked = false;
@@ -355,7 +367,7 @@ body {
   <div id="infobox" onclick="javascript:hideshow(document.getElementById('infobox'))">
     A térképet <a href="http://www.geocaching.hu/users.geo?id=18721" target="_blank">bpeti68</a> készítette 
     <a href="http://www.mapnik.org" target="_blank">Mapnik</a> eszközkészlettel a <a href="http://turistautak.hu" target="_blank">turistautak.hu</a> adatbázisa alapján.<br />
-    Az adatbázisból minden nap 01:00 órakor letöltött adatokból készüt.<br />
+    Az adatbázisból minden nap 01:00 órakor letöltött adatokból készült.<br />
 	<table id="legend">
 	<tr><th colspan="4">Jelmagyarázat</th></tr>
 	<tr><td colspan="2"><b>Utak</b></td><td colspan="2"><b>Felületek</b></td></tr>
@@ -368,9 +380,7 @@ body {
 	<tr><td>Földút:</td><td><img src="img/unsurfaced.png"></td><td>&nbsp;</td><td>&nbsp;</td></tr>
 	<tr><td>Gyalogút:</td><td><img src="img/walkway.png"></td><td>&nbsp;</td><td>&nbsp;</td></tr>
     </table>
-	<p>
-	Verzió: 0.3-alfa
-	</p>
+    <p id="versionParagraph"></p>
   </div>
 </body>
 </html>
