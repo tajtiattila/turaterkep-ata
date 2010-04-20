@@ -100,7 +100,14 @@ function init(){
     panel.activateControl(navControl);
 
     if (altscroll)
-        mapElement = document.getElementById("map").addEventListener("mousewheel", mousewheelHandler, false);
+        document.getElementById("map").addEventListener("mousewheel", mousewheelHandler, false);
+
+    var version = "Verzió: 0.3-alfa. ";
+    if (altscroll)
+        version += "Alternatív változat, görgetés: mozgatás. (Normál változat <a href=\"index.html\">itt</a>)";
+    else
+        version += "Normál változat, görgetés: nagyítás. (Alternatív változat <a href=\"alt.html\">itt</a>)";
+    document.getElementById("versionParagraph").innerHTML = version;
 
     if(!map.getCenter()) map.setCenter(lonLatToMercator( new OpenLayers.LonLat(19.41199, 47.16085)), 7);
 
