@@ -41,7 +41,7 @@ function init(){
     var PanZoomBar = new OpenLayers.Control.PanZoomBar();
     var panel = new OpenLayers.Control.Panel({defaultControl: PanZoomBar});
 
-    var navControl = new OpenLayers.Control.Navigation({title:'Mozgatás', zoomWheelEnabled:false});
+    var navControl = new OpenLayers.Control.Navigation({title:'Mozgatás', zoomWheelEnabled:!altscroll});
     panel.addControls([
         PanZoomBar,
         navControl,
@@ -99,7 +99,9 @@ function init(){
     map.addControl(panel);
     panel.activateControl(navControl);
 
-    mapElement = document.getElementById("map").addEventListener("mousewheel", mousewheelHandler, false);
+    if (altscroll)
+        mapElement = document.getElementById("map").addEventListener("mousewheel", mousewheelHandler, false);
+
     if(!map.getCenter()) map.setCenter(lonLatToMercator( new OpenLayers.LonLat(19.41199, 47.16085)), 7);
 
     document.getElementById('lineToggle').checked = false;
