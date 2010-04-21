@@ -3,6 +3,9 @@ var domborzat = null;
 var kontur = null;
 
 function init(){
+    var altscroll = false;
+    if (location.search.match(/[?&]altv=1/))
+        altscroll = true;
     map = new OpenLayers.Map('map',
             {controls: [
             new OpenLayers.Control.Permalink('permalink'),
@@ -106,7 +109,7 @@ function init(){
     if (altscroll)
         version += "Alternatív változat, görgetés: mozgatás. (Normál változat <a href=\"index.html\">itt</a>)";
     else
-        version += "Normál változat, görgetés: nagyítás. (Alternatív változat <a href=\"alt.html\">itt</a>)";
+        version += "Normál változat, görgetés: nagyítás. (Alternatív változat <a href=\"index.html?altv=1\">itt</a>)";
     document.getElementById("versionParagraph").innerHTML = version;
 
     if(!map.getCenter()) map.setCenter(lonLatToMercator( new OpenLayers.LonLat(19.41199, 47.16085)), 7);
