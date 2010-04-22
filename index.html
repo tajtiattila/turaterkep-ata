@@ -198,9 +198,9 @@ body {
                     maxExtent: new OpenLayers.Bounds( lonToMercator(16), latToMercator(45), lonToMercator(23), latToMercator(49))
                     });
 
-            domborzat =  new OpenLayers.Layer.TUHU.SRTM("Domborzat", 
+            domborzat =  new OpenLayers.Layer.TUHU("Domborzat",
                     "http://turaterkep.hostcity.hu/srtm/",  {});
-            layerMapnik = new OpenLayers.Layer.TUHU.Mapnik("Turstautak.hu (by Mapnik)",
+            layerMapnik = new OpenLayers.Layer.TUHU("Turstautak.hu (by Mapnik)",
                     "http://turaterkep.hostcity.hu/tiles/", {});
 
             layerMapnik.isBaseLayer = true;

@@ -1,6 +1,4 @@
 
-baseUrl = "http://turaterkep.hostcity.hu/"
-
 /**
  * Namespace: Util.TUHU
  */
@@ -122,6 +120,7 @@ OpenLayers.Layer.TUHU = OpenLayers.Class(OpenLayers.Layer.TMS, {
             maxResolution: 156543.0339,
             units: "m",
             projection: "EPSG:900913",
+			numZoomLevels: 17,
             transitionEffect: "resize"
         }, options);
         var newArguments = [name, url, options];
@@ -169,74 +168,3 @@ OpenLayers.Layer.TUHU = OpenLayers.Class(OpenLayers.Layer.TMS, {
     CLASS_NAME: "OpenLayers.Layer.TUHU"
 });
 
-/**
- * Class: OpenLayers.Layer.TUHU.Mapnik
- *
- * Inherits from:
- *  - <OpenLayers.Layer.TUHU>
- */
-OpenLayers.Layer.TUHU.Mapnik = OpenLayers.Class(OpenLayers.Layer.TUHU, {
-    /**
-     * Constructor: OpenLayers.Layer.TUHU.Mapnik
-     *
-     * Parameters:
-     * name - {String}
-     * options - {Object} Hashtable of extra options to tag onto the layer
-     */
-    initialize: function(name, options) {
-        var url = [baseUrl+"tiles/"];
-        options = OpenLayers.Util.extend({ numZoomLevels: 17 }, options);
-        var newArguments = [name, url, options];
-        OpenLayers.Layer.TUHU.prototype.initialize.apply(this, newArguments);
-    },
-
-    CLASS_NAME: "OpenLayers.Layer.TUHU.Mapnik"
-});
-
-/**
- * Class: OpenLayers.Layer.TUHU.Contours
- *
- * Inherits from:
- *  - <OpenLayers.Layer.TUHU>
- */
-OpenLayers.Layer.TUHU.Contours = OpenLayers.Class(OpenLayers.Layer.TUHU, {
-    /**
-     * Constructor: OpenLayers.Layer.TUHU.Contours
-     *
-     * Parameters:
-     * name - {String}
-     * options - {Object} Hashtable of extra options to tag onto the layer
-     */
-    initialize: function(name, options) {
-        var url = [baseUrl+"contours/"];
-        options = OpenLayers.Util.extend({ numZoomLevels: 17 }, options);
-        var newArguments = [name, url, options];
-        OpenLayers.Layer.TUHU.prototype.initialize.apply(this, newArguments);
-    },
-
-    CLASS_NAME: "OpenLayers.Layer.TUHU.Contours"
-});
-
-/**
- * Class: OpenLayers.Layer.TUHU.SRTM
- *
- * Inherits from:
- *  - <OpenLayers.Layer.TUHU>
- */
-OpenLayers.Layer.TUHU.SRTM = OpenLayers.Class(OpenLayers.Layer.TUHU, {
-    /**
-     * Constructor: OpenLayers.Layer.TUHU.SRTM
-     *
-     * Parameters:
-     * name - {String}
-     * options - {Object} Hashtable of extra options to tag onto the layer
-     */
-    initialize: function(name, options) {
-        var url = [baseUrl+"srtm/"];
-        options = OpenLayers.Util.extend({ numZoomLevels: 17 }, options);
-        var newArguments = [name, url, options];
-        OpenLayers.Layer.TUHU.prototype.initialize.apply(this, newArguments);
-    },
-
-    CLASS_NAME: "OpenLayers.Layer.TUHU.SRTM"
-});
